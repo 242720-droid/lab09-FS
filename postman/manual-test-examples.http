@@ -1,0 +1,63 @@
+@baseUrl = http://localhost:3000
+@userToken = paste-user-token-here
+@adminToken = paste-admin-token-here
+
+### Health headers (Task 1)
+GET {{baseUrl}}/health
+
+### Strict validation (Task 1) - expect 400
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "email": "test@example.com",
+  "password": "Secure1234",
+  "isAdmin": true
+}
+
+### Login normal user (copy access_token into @userToken)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "User1234"
+}
+
+### Create note (Task 2)
+POST {{baseUrl}}/notes
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+
+{
+  "title": "Alpha note",
+  "content": "Sample note content",
+  "tags": ["lab", "security"]
+}
+
+### Get notes ascending (Task 4)
+GET {{baseUrl}}/notes
+Authorization: Bearer {{userToken}}
+
+### Get notes descending (Task 4)
+GET {{baseUrl}}/notes?order=DESC
+Authorization: Bearer {{userToken}}
+
+### Invalid order (Task 4) - expect 400
+GET {{baseUrl}}/notes?order=random
+Authorization: Bearer {{userToken}}
+
+### Change password (Task 5) - expect 200
+POST {{baseUrl}}/auth/change-password
+Authorization: Bearer {{userToken}}
+Content-Type: application/json
+
+{
+  "currentPassword": "User1234",
+  "newPassword": "User5678"
+}
+
+### Admin list (Task 6)
+GET {{baseUrl}}/users
+Authorization: Bearer {{adminToken}}
